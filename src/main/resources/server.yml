@@ -1,0 +1,79 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Server
+tags:
+  - name: Server
+
+paths:
+  /someNormalPath:
+    post:
+      tags:
+        - Server
+      operationId: someNormalOperation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayloadOne'
+      responses:
+        200:
+          description: OK
+  /files/upload:
+    post:
+      tags:
+        - Server
+      operationId: uploadSomeFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadObject'
+      responses:
+        200:
+          description: OK
+
+components:
+  schemas:
+    # used in 'someNormalOperation' and generated properly
+    PayloadOne:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    # used in 'UploadObject' only but not generated at all
+    PayloadTwo:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+
+    # not generated but destructed into method parameters properly
+    UploadObject:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+        payload:
+          $ref: '#/components/schemas/PayloadTwo'
+
+    # unused but still generated
+    PayloadThree:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
